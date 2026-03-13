@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Emotion Detector</title>
+
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            margin-top: 80px;
+            background-color: #f2f2f2;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .check {
+            background-color: #007BFF;
+            color: white;
+        }
+        
+        .start {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .stop {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        #camera {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        img {
+            border: 5px solid black;
+            border-radius: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Let's Find Your Emotion Today 😊</h1>
+
+    <button class="check" onclick="showCamera()">Check Emotion</button>
+
+    <div id="camera">
+
+        <br>
+
+        <button class="start" onclick="startCamera()">Start Camera</button>
+
+        <button class="stop" onclick="stopCamera()">Stop Camera</button>
+
+        <br><br>
+
+        <img id="videoFeed" width="600">
+        <h2 id="emotionText">Emotion: 😐 Neutral</h2>
+
+    </div>
+
+
+    <script>
+        function showCamera() {
+            document.getElementById("camera").style.display = "block";
+        }
+
+        function startCamera() {
+
+            fetch('/start')
+                .then(() => {
+                    document.getElementById("videoFeed").src = "/video";
+                })
+
+        }
+
+        function stopCamera() {
+
+            fetch('/stop')
+                .then(() => {
+                    document.getElementById("videoFeed").src = "";
+                })
+
+        }
+
+
+        function updateEmotion() {
+
+            fetch('/emotion')
+                .then(response => response.text())
+                .then(emotion => {
+
+                    let emoji = "😐"
+                    let color = "#f2f2f2"
+
+                    if (emotion == "Happy") {
+                        emoji = "😊"
+                        color = "#90EE90"
+                    }
+
+                    if (emotion == "Sad") {
+                        emoji = "😢"
+                        color = "#87CEEB"
+                    }
+
+                    if (emotion == "Angry") {
+                        emoji = "😠"
+                        color = "#FF7F7F"
+                    }
+
+                    if (emotion == "Surprise") {
+                        emoji = "😲"
+                        color = "#FFF176"
+                    }
+
+                    if (emotion == "Fear") {
+                        emoji = "😨"
+                        color = "#DDA0DD"
+                    }
+
+                    if (emotion == "Disgust") {
+                        emoji = "🤢"
+                        color = "#A1887F"
+                    }
+
+                    if (emotion == "Neutral") {
+                        emoji = "😐"
+                        color = "#E0E0E0"
+                    }
+
+                    document.getElementById("emotionText").innerHTML =
+                        "Emotion: " + emoji + " " + emotion
+
+                    document.body.style.backgroundColor = color
+
+                })
+
+        }
+
+        setInterval(updateEmotion, 1000)
+    </script>
+
+</body>
+
+</html>
